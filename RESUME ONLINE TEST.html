@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kim Hwa Mok – Marketing & Live Commerce</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --black: #0d0d0d;
+  --off-black: #141414;
+  --panel: #1a1a1a;
+  --border: rgba(255,255,255,0.08);
+  --white: #f5f0e8;
+  --muted: rgba(245,240,232,0.45);
+  --accent: #e8c547;
+  --accent2: #5bc4a0;
+  --accent3: #e06b4a;
+  --tag-bg: rgba(232,197,71,0.12);
+}
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--white); font-family: 'DM Mono', monospace; font-weight: 300; overflow-x: hidden; cursor: none; }
+#cursor { position: fixed; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width 0.3s, height 0.3s; mix-blend-mode: difference; }
+#cursor-ring { position: fixed; width: 36px; height: 36px; border: 1.5px solid var(--accent); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); opacity: 0.5; transition: width 0.3s, height 0.3s, opacity 0.3s; }
+body:hover #cursor-ring { opacity: 1; }
+#progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 1000; width: 0%; transition: width 0.1s linear; }
+nav { position: fixed; top: 0; width: 100%; z-index: 500; padding: 1.4rem 3rem; display: flex; justify-content: space-between; align-items: center; background: rgba(13,13,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--white); text-decoration: none; letter-spacing: 0.15em; text-transform: uppercase; }
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { text-decoration: none; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.3s; }
+.nav-links a:hover { color: var(--accent); }
+.nav-cta { background: var(--accent); color: var(--black); padding: 0.5rem 1.2rem; border-radius: 2rem; font-size: 0.72rem; font-family: 'Syne', sans-serif; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; }
+.nav-cta:hover { background: white; transform: translateY(-2px); }
+#hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 3rem 4rem; position: relative; overflow: hidden; }
+.hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); }
+.hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards; }
+.hero-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(3.5rem, 9vw, 8rem); line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.9s ease 0.5s forwards; }
+.hero-name .line2 { color: transparent; -webkit-text-stroke: 1px rgba(245,240,232,0.3); }
+.hero-name .line2 .aw { color: var(--accent); -webkit-text-stroke: 0; }
+.hero-tagline { font-family: 'Instrument Serif', serif; font-style: italic; font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--muted); max-width: 540px; line-height: 1.6; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.9s ease 0.7s forwards; }
+.hero-tags { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.9s ease 0.9s forwards; }
+.htag { background: var(--tag-bg); border: 1px solid rgba(232,197,71,0.2); color: var(--accent); padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.hero-scroll { display: flex; align-items: center; gap: 1rem; color: var(--muted); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0; animation: fadeUp 0.9s ease 1.1s forwards; }
+.scroll-line { width: 60px; height: 1px; background: var(--muted); position: relative; overflow: hidden; }
+.scroll-line::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--accent); animation: scanline 2s ease-in-out infinite; }
+@keyframes scanline { 0%{left:-100%} 100%{left:100%} }
+.hero-float { position: absolute; right: 4rem; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); opacity: 0; animation: fadeUp 1s ease 1.3s forwards; }
+.story-section { min-height: 100vh; display: flex; align-items: center; padding: 6rem 3rem; position: relative; border-top: 1px solid var(--border); }
+.chapter-mark { position: absolute; left: 3rem; top: 3rem; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 0.8rem; }
+.chapter-mark::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--accent); }
+#person { background: var(--off-black); }
+.person-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; max-width: 1200px; margin: 0 auto; width: 100%; }
+.big-statement { font-family: 'Syne', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.15; margin-bottom: 2rem; }
+.big-statement em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--accent); }
+.story-p { font-size: 0.88rem; color: var(--muted); line-height: 1.9; margin-bottom: 1.2rem; }
+.journey-title { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+.journey-item { display: flex; align-items: flex-start; gap: 1.2rem; padding: 1.2rem 0; border-bottom: 1px solid var(--border); opacity: 0; transform: translateX(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.journey-item.visible { opacity: 1; transform: translateX(0); }
+.journey-item:first-child { border-top: 1px solid var(--border); }
+.j-flag { font-size: 1.8rem; flex-shrink: 0; }
+.j-place { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--white); margin-bottom: 0.2rem; }
+.j-detail { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+.j-tag { margin-left: auto; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent2); background: rgba(91,196,160,0.1); padding: 0.2rem 0.6rem; border-radius: 1rem; white-space: nowrap; flex-shrink: 0; }
+.surprise-card { background: var(--panel); border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem; margin-top: 2rem; position: relative; overflow: hidden; cursor: pointer; transition: border-color 0.3s, transform 0.3s; }
+.surprise-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+.surprise-card::before { content: '🎲'; position: absolute; right: 1.2rem; top: 1.2rem; font-size: 1.5rem; opacity: 0.4; transition: opacity 0.3s, transform 0.3s; }
+.surprise-card:hover::before { opacity: 1; transform: rotate(20deg) scale(1.2); }
+.surprise-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+.surprise-text { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.1rem; color: var(--white); line-height: 1.5; }
+.surprise-hidden { display: none; margin-top: 0.8rem; font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+.surprise-hint { font-size: 0.7rem; color: var(--muted); margin-top: 0.5rem; opacity: 0.6; }
+#work { background: var(--black); }
+.work-layout { max-width: 1200px; margin: 0 auto; width: 100%; }
+.section-header { margin-bottom: 4rem; }
+.section-eyebrow { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+.section-heading { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; }
+.work-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.work-card { background: var(--panel); border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; position: relative; overflow: hidden; opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease, border-color 0.3s; }
+.work-card.visible { opacity: 1; transform: translateY(0); }
+.work-card:hover { border-color: rgba(232,197,71,0.4); }
+.work-card.featured { grid-column: 1/-1; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; }
+.wca { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--accent), transparent); }
+.work-card.featured .wca { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.wc-date { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+.wc-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--white); margin-bottom: 0.3rem; line-height: 1.3; }
+.wc-company { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; }
+.wc-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.wc-bullets li { font-size: 0.8rem; color: var(--muted); line-height: 1.6; padding-left: 1rem; position: relative; }
+.wc-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+.wc-stat-box { background: rgba(232,197,71,0.07); border: 1px solid rgba(232,197,71,0.2); border-radius: 0.8rem; padding: 1.5rem; text-align: center; min-width: 140px; flex-shrink: 0; }
+.wc-stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: var(--accent); display: block; margin-bottom: 0.3rem; }
+.wc-stat-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+#skills { background: var(--off-black); }
+.skills-layout { max-width: 1200px; margin: 0 auto; width: 100%; }
+.skills-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 3rem; }
+.skill-block { background: var(--panel); border: 1px solid var(--border); border-radius: 0.8rem; padding: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s, background 0.3s; }
+.skill-block.visible { opacity: 1; transform: translateY(0); }
+.skill-block:hover { border-color: rgba(232,197,71,0.3); background: rgba(232,197,71,0.04); }
+.sb-icon { font-size: 1.6rem; margin-bottom: 0.8rem; }
+.sb-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--white); margin-bottom: 0.4rem; }
+.sb-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+.sb-tag { font-size: 0.65rem; color: var(--muted); background: rgba(255,255,255,0.05); padding: 0.2rem 0.5rem; border-radius: 0.3rem; }
+.lang-section { background: var(--panel); border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; }
+.lang-title { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+.lang-bars { display: flex; flex-direction: column; gap: 1rem; }
+.lang-row { display: flex; align-items: center; gap: 1.5rem; }
+.lang-name-col { font-size: 0.8rem; color: var(--white); width: 80px; flex-shrink: 0; }
+.lang-bar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.lang-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; width: 0%; transition: width 1.2s ease; }
+.lang-label-col { font-size: 0.65rem; color: var(--muted); width: 80px; text-align: right; flex-shrink: 0; }
+#education { background: var(--black); }
+.edu-layout { max-width: 1200px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+.edu-list { display: flex; flex-direction: column; gap: 1rem; }
+.edu-item { background: var(--panel); border: 1px solid var(--border); border-radius: 0.8rem; padding: 1.5rem; display: flex; gap: 1.2rem; align-items: flex-start; opacity: 0; transform: translateX(-20px); transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s; }
+.edu-item.visible { opacity: 1; transform: translateX(0); }
+.edu-item:hover { border-color: rgba(232,197,71,0.3); transform: translateX(5px); }
+.edu-icon { font-size: 1.8rem; flex-shrink: 0; }
+.edu-degree { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--white); margin-bottom: 0.3rem; line-height: 1.3; }
+.edu-school { font-size: 0.75rem; color: var(--accent); margin-bottom: 0.2rem; }
+.edu-detail { font-size: 0.72rem; color: var(--muted); }
+.workstyle-card { background: var(--panel); border: 1px solid var(--border); border-radius: 1rem; padding: 2.5rem; position: sticky; top: 8rem; }
+.ws-label { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent2); margin-bottom: 1rem; }
+.ws-quote { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.4rem; color: var(--white); line-height: 1.5; margin-bottom: 1.5rem; border-left: 2px solid var(--accent); padding-left: 1.2rem; }
+.ws-traits { display: flex; flex-direction: column; gap: 0.8rem; }
+.ws-trait { display: flex; align-items: center; gap: 0.8rem; font-size: 0.8rem; color: var(--muted); }
+#hire { background: var(--off-black); min-height: 80vh; display: flex; align-items: center; }
+.hire-layout { max-width: 900px; margin: 0 auto; width: 100%; text-align: center; padding: 4rem 0; }
+.hire-pre { font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 2rem; }
+.hire-heading { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.05; margin-bottom: 1.5rem; }
+.hire-heading .outline { color: transparent; -webkit-text-stroke: 1.5px var(--white); }
+.hire-sub { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.2rem; color: var(--muted); margin-bottom: 3rem; line-height: 1.6; }
+.hire-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn-hire { background: var(--accent); color: var(--black); padding: 1rem 2.5rem; border-radius: 3rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; border: none; cursor: none; }
+.btn-hire:hover { background: white; transform: translateY(-3px); box-shadow: 0 15px 40px rgba(232,197,71,0.3); }
+.btn-outline-hire { background: transparent; color: var(--white); padding: 1rem 2.5rem; border-radius: 3rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: 1.5px solid var(--border); transition: all 0.3s; cursor: none; }
+.btn-outline-hire:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
+.hire-contact-strip { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); }
+.hire-contact-strip a { color: var(--accent); text-decoration: none; }
+#chat-bubble { position: fixed; bottom: 2rem; right: 2rem; z-index: 900; }
+#chat-toggle { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); border: none; cursor: none; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 0 8px 30px rgba(232,197,71,0.4); transition: all 0.3s; position: relative; }
+#chat-toggle:hover { background: white; transform: scale(1.1); }
+.chat-ping { position: absolute; top: -2px; right: -2px; width: 12px; height: 12px; background: var(--accent2); border-radius: 50%; border: 2px solid var(--black); animation: pingA 2s ease-in-out infinite; }
+@keyframes pingA { 0%,100%{transform:scale(1)} 50%{transform:scale(1.4)} }
+#chat-window { position: absolute; bottom: 68px; right: 0; width: 340px; background: var(--panel); border: 1px solid var(--border); border-radius: 1.2rem; display: none; flex-direction: column; overflow: hidden; max-height: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+#chat-window.open { display: flex; }
+.chat-header { background: var(--off-black); border-bottom: 1px solid var(--border); padding: 1rem 1.2rem; display: flex; align-items: center; gap: 0.8rem; }
+.chat-av { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+.chat-hinfo h4 { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--white); }
+.chat-hinfo p { font-size: 0.68rem; color: var(--muted); }
+.chat-qleft { margin-left: auto; background: var(--tag-bg); color: var(--accent); font-size: 0.65rem; padding: 0.2rem 0.6rem; border-radius: 1rem; letter-spacing: 0.05em; }
+#chat-msgs { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.7rem; min-height: 180px; max-height: 300px; }
+#chat-msgs::-webkit-scrollbar { width: 4px; }
+#chat-msgs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.msg { display: flex; gap: 0.5rem; max-width: 90%; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.msg-b { padding: 0.65rem 0.9rem; border-radius: 0.9rem; font-size: 0.8rem; line-height: 1.5; }
+.msg.bot .msg-b { background: rgba(255,255,255,0.07); color: var(--white); border-bottom-left-radius: 0.2rem; }
+.msg.user .msg-b { background: var(--accent); color: var(--black); border-bottom-right-radius: 0.2rem; }
+.typing { display: flex; gap: 4px; padding: 0.65rem 0.9rem; background: rgba(255,255,255,0.07); border-radius: 0.9rem; border-bottom-left-radius: 0.2rem; width: fit-content; }
+.tdot { width: 5px; height: 5px; background: var(--muted); border-radius: 50%; animation: td 1.2s ease-in-out infinite; }
+.tdot:nth-child(2){animation-delay:0.2s} .tdot:nth-child(3){animation-delay:0.4s}
+@keyframes td { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+.chat-foot { padding: 0.8rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+#chat-in { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 2rem; padding: 0.55rem 1rem; color: var(--white); font-family: 'DM Mono', monospace; font-size: 0.78rem; outline: none; transition: border-color 0.3s; }
+#chat-in:focus { border-color: var(--accent); }
+#chat-in::placeholder { color: var(--muted); }
+#chat-btn { width: 34px; height: 34px; background: var(--accent); border: none; border-radius: 50%; cursor: none; display: flex; align-items: center; justify-content: center; transition: all 0.3s; flex-shrink: 0; }
+#chat-btn:hover { background: white; }
+#chat-btn svg { width: 14px; fill: var(--black); }
+.chat-done { padding: 1rem; font-size: 0.75rem; color: var(--muted); text-align: center; border-top: 1px solid var(--border); line-height: 1.6; }
+.chat-done a { color: var(--accent); text-decoration: none; }
+footer { background: var(--black); border-top: 1px solid var(--border); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--muted); }
+footer a { color: var(--accent); text-decoration: none; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(25px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity: 0; transform: translateY(35px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.d1{transition-delay:0.1s} .d2{transition-delay:0.2s} .d3{transition-delay:0.3s} .d4{transition-delay:0.4s}
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem} .nav-links{display:none}
+  .story-section{padding:5rem 1.5rem} #hero{padding:7rem 1.5rem 4rem}
+  .person-layout,.work-cards,.skills-grid,.edu-layout{grid-template-columns:1fr;gap:3rem}
+  .work-card.featured{grid-column:auto;grid-template-columns:1fr}
+  .hero-float{display:none} #chat-window{width:300px}
+}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress"></div>
+
+<nav>
+  <a href="#hero" class="nav-logo">KHM<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#person">Story</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#hire">Hire Me</a></li>
+  </ul>
+  <a href="#hire" class="nav-cta">Let's Talk</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-eyebrow">Marketing Manager · Live Commerce · Seoul, Korea</div>
+  <h1 class="hero-name">
+    <div>Kim</div>
+    <div class="line2">Hwa <span class="aw">Mok</span></div>
+  </h1>
+  <p class="hero-tagline">I make people stop scrolling — and start buying.<br>Backed by psychology. Driven by data.</p>
+  <div class="hero-tags">
+    <span class="htag">TikTok Live</span>
+    <span class="htag">Cross-Border</span>
+    <span class="htag">Automation</span>
+    <span class="htag">Growth Strategy</span>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+  <div class="hero-float">Marketing · Strategy · Growth</div>
+</section>
+
+<section id="person" class="story-section">
+  <div class="chapter-mark">Chapter 01 · The Person</div>
+  <div class="person-layout">
+    <div>
+      <p class="big-statement reveal">I'm not your typical <em>marketing manager.</em></p>
+      <p class="story-p reveal d1">I grew up in Malaysia, studied the human mind at the University of Nottingham, served in the Korean army, lived in the UK — and somewhere in all of that, I discovered that understanding <em>people</em> is the ultimate marketing superpower.</p>
+      <p class="story-p reveal d2">Today I'm based in Seoul, scaling a cross-border live commerce business from Korea to Singapore. My psychology background isn't just an academic credential — it's how I think about every campaign, every script, every funnel.</p>
+      <div class="surprise-card reveal d3" onclick="toggleSurprise(this)">
+        <div class="surprise-label">✦ Fun Fact — Click to reveal</div>
+        <div class="surprise-text">There's something I do every Wednesday without fail...</div>
+        <div class="surprise-hidden">Every Wednesday evening, I play board games. It keeps my strategic thinking sharp — and reminds me that the best moves are always three steps ahead. 🎲</div>
+        <div class="surprise-hint">↑ click me</div>
+      </div>
+    </div>
+    <div class="reveal d2">
+      <div class="journey-title">✦ My Journey Across Borders</div>
+      <div>
+        <div class="journey-item"><div class="j-flag">🇲🇾</div><div><div class="j-place">Malaysia</div><div class="j-detail">Grew up here. Studied Psychology & Cognitive Neuroscience at University of Nottingham.</div></div><span class="j-tag">Roots</span></div>
+        <div class="journey-item"><div class="j-flag">🇬🇧</div><div><div class="j-place">United Kingdom</div><div class="j-detail">Working holiday. Lived and worked abroad, gaining real-world cross-cultural experience.</div></div><span class="j-tag">Adventure</span></div>
+        <div class="journey-item"><div class="j-flag">🇰🇷</div><div><div class="j-place">South Korea</div><div class="j-detail">Served in the Korean army. Now home base — scaling brands from Seoul to Singapore.</div></div><span class="j-tag">Now</span></div>
+        <div class="journey-item"><div class="j-flag">🇸🇬</div><div><div class="j-place">Singapore</div><div class="j-detail">Primary target market. High-spending audience for Korean fashion live commerce.</div></div><span class="j-tag">Market</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work" class="story-section">
+  <div class="chapter-mark">Chapter 02 · The Work</div>
+  <div class="work-layout">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">✦ Where I've Delivered Results</div>
+      <h2 class="section-heading">Work that<br><span style="color:var(--accent)">actually moves the needle.</span></h2>
+    </div>
+    <div class="work-cards">
+      <div class="work-card featured">
+        <div class="wca"></div>
+        <div>
+          <div class="wc-date">May 2024 – Present</div>
+          <div class="wc-role">Marketing Manager & Live Commerce Growth Strategist</div>
+          <div class="wc-company">Shopeakstore · TikTok & Shopee Live, Korea → Singapore</div>
+          <ul class="wc-bullets">
+            <li>Scaled livestream revenue through conversion-focused scripting and psychological sales frameworks</li>
+            <li>Designed automation systems with N8N + Google Sheets — turning repetitive work into systems</li>
+            <li>Managed full cross-border operations targeting Singapore's high-spending fashion market</li>
+            <li>Built SOPs that reduced manual workload and improved execution speed across the team</li>
+            <li>Coordinated Korean supplier relationships and structured customer communication pipelines</li>
+          </ul>
+        </div>
+        <div class="wc-stat-box">
+          <span class="wc-stat-num">2K→4K+</span>
+          <span class="wc-stat-label">SGD Revenue<br>per Stream Goal</span>
+        </div>
+      </div>
+      <div class="work-card">
+        <div class="wca" style="background:linear-gradient(90deg,var(--accent2),transparent)"></div>
+        <div class="wc-date">May 2022 – Feb 2024</div>
+        <div class="wc-role">Public Service Officer</div>
+        <div class="wc-company">Dodamdong Community Service Center · Seoul</div>
+        <ul class="wc-bullets">
+          <li>Supported 2,000+ individuals throughout COVID recovery period</li>
+          <li>Improved data reporting efficiency using Excel and structured workflows</li>
+          <li>Organized election booths and community engagement events</li>
+        </ul>
+      </div>
+      <div class="work-card">
+        <div class="wca" style="background:linear-gradient(90deg,#6a7a5a,transparent)"></div>
+        <div class="wc-date">Military Service</div>
+        <div class="wc-role">Korean Army</div>
+        <div class="wc-company">Republic of Korea Armed Forces</div>
+        <ul class="wc-bullets">
+          <li>Completed mandatory military service — built discipline, resilience, and execution under pressure</li>
+          <li>Shapes how I approach deadlines and high-stakes decisions today</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="story-section">
+  <div class="chapter-mark">Chapter 03 · The Skills</div>
+  <div class="skills-layout">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">✦ What I Bring to the Table</div>
+      <h2 class="section-heading">Broad toolkit.<br><span style="color:var(--accent)">Sharp focus.</span></h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-block d1"><div class="sb-icon">📱</div><div class="sb-name">Live Commerce</div><div class="sb-tags"><span class="sb-tag">TikTok Live</span><span class="sb-tag">Shopee Live</span><span class="sb-tag">Conversion Scripts</span><span class="sb-tag">Cross-Border Ops</span></div></div>
+      <div class="skill-block d2"><div class="sb-icon">🧠</div><div class="sb-name">Marketing Strategy</div><div class="sb-tags"><span class="sb-tag">Consumer Psychology</span><span class="sb-tag">Content Strategy</span><span class="sb-tag">Revenue Growth</span><span class="sb-tag">Brand Storytelling</span></div></div>
+      <div class="skill-block d3"><div class="sb-icon">⚙️</div><div class="sb-name">Automation</div><div class="sb-tags"><span class="sb-tag">N8N</span><span class="sb-tag">Google Sheets</span><span class="sb-tag">Excel</span><span class="sb-tag">SOP Design</span><span class="sb-tag">Python (Learning)</span></div></div>
+      <div class="skill-block d2"><div class="sb-icon">🎬</div><div class="sb-name">Content & Video</div><div class="sb-tags"><span class="sb-tag">CapCut</span><span class="sb-tag">Short-form Video</span><span class="sb-tag">Live Hosting</span></div></div>
+      <div class="skill-block d3"><div class="sb-icon">📊</div><div class="sb-name">Data & Research</div><div class="sb-tags"><span class="sb-tag">SPSS</span><span class="sb-tag">MATLAB</span><span class="sb-tag">Data Analysis</span></div></div>
+      <div class="skill-block d4"><div class="sb-icon">🤝</div><div class="sb-name">Operations</div><div class="sb-tags"><span class="sb-tag">Supplier Relations</span><span class="sb-tag">Customer Lifecycle</span><span class="sb-tag">Team Coordination</span></div></div>
+    </div>
+    <div class="lang-section reveal">
+      <div class="lang-title">✦ Languages</div>
+      <div class="lang-bars">
+        <div class="lang-row"><span class="lang-name-col">English</span><div class="lang-bar-track"><div class="lang-bar-fill" data-width="98"></div></div><span class="lang-label-col">Fluent</span></div>
+        <div class="lang-row"><span class="lang-name-col">Korean</span><div class="lang-bar-track"><div class="lang-bar-fill" data-width="65"></div></div><span class="lang-label-col">Intermediate</span></div>
+        <div class="lang-row"><span class="lang-name-col">Chinese</span><div class="lang-bar-track"><div class="lang-bar-fill" data-width="60"></div></div><span class="lang-label-col">Intermediate</span></div>
+        <div class="lang-row"><span class="lang-name-col">Malay</span><div class="lang-bar-track"><div class="lang-bar-fill" data-width="35"></div></div><span class="lang-label-col">Basic</span></div>
+        <div class="lang-row"><span class="lang-name-col">German</span><div class="lang-bar-track"><div class="lang-bar-fill" data-width="10"></div></div><span class="lang-label-col">Learning</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education" class="story-section">
+  <div class="chapter-mark">Chapter 04 · The Foundation</div>
+  <div class="edu-layout">
+    <div>
+      <div class="section-header reveal">
+        <div class="section-eyebrow">✦ Education</div>
+        <h2 class="section-heading">Thinking deeper<br><span style="color:var(--accent)">is the edge.</span></h2>
+      </div>
+      <div class="edu-list">
+        <div class="edu-item d1"><div class="edu-icon">🎓</div><div><div class="edu-degree">BSc (Hons) Psychology & Cognitive Neuroscience</div><div class="edu-school">University of Nottingham Malaysia</div><div class="edu-detail">Second Upper Class Honours</div></div></div>
+        <div class="edu-item d2"><div class="edu-icon">🔬</div><div><div class="edu-degree">Foundation in Science</div><div class="edu-school">University of Nottingham Malaysia</div><div class="edu-detail">Pre-University Programme</div></div></div>
+        <div class="edu-item d3"><div class="edu-icon">📚</div><div><div class="edu-degree">IGCSE</div><div class="edu-school">Havil International School</div><div class="edu-detail">3A* · 2A · 2B</div></div></div>
+      </div>
+    </div>
+    <div class="workstyle-card reveal">
+      <div class="ws-label">✦ Work Style</div>
+      <div class="ws-quote">"Clear, concise, straight to the point — and I will finish the task diligently."</div>
+      <div class="ws-traits">
+        <div class="ws-trait"><span>⚡</span> Direct communicator — no fluff, just results</div>
+        <div class="ws-trait"><span>🎯</span> Execution-focused — starts and finishes</div>
+        <div class="ws-trait"><span>🌏</span> Cross-cultural — bridges Korea, Singapore & beyond</div>
+        <div class="ws-trait"><span>🧠</span> Psychology-first — understands the "why" behind buying</div>
+        <div class="ws-trait"><span>🎲</span> Strategic thinker — Wednesday board game champion</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hire" class="story-section">
+  <div class="hire-layout reveal">
+    <div class="hire-pre">✦ The Final Chapter</div>
+    <h2 class="hire-heading">Ready to<br><span class="outline">hire someone</span><br>who delivers?</h2>
+    <p class="hire-sub">You've read the story. You've seen the work.<br>Let's write the next chapter — together.</p>
+    <div class="hire-actions">
+      <a href="mailto:hwamok200071@gmail.com" class="btn-hire">✉ Email Kim</a>
+      <a href="#person" class="btn-outline-hire">↑ Read Again</a>
+    </div>
+    <div class="hire-contact-strip"><a href="mailto:hwamok200071@gmail.com">hwamok200071@gmail.com</a> · Seoul, South Korea</div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Kim Hwa Mok</span>
+  <span>Built to stand out · Seoul 🇰🇷</span>
+</footer>
+
+<div id="chat-bubble">
+  <div id="chat-window">
+    <div class="chat-header">
+      <div class="chat-av">🤖</div>
+      <div class="chat-hinfo"><h4>Ask About Kim</h4><p>AI assistant · powered by Claude</p></div>
+      <span class="chat-qleft" id="qleft">5 left</span>
+    </div>
+    <div id="chat-msgs">
+      <div class="msg bot"><div class="msg-b">Hey! 👋 Ask me anything about Kim — her background, skills, work style, or why you should hire her. You get 5 questions!</div></div>
+    </div>
+    <div id="chat-foot-area" class="chat-foot">
+      <input type="text" id="chat-in" placeholder="Ask me about Kim..." />
+      <button id="chat-btn"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+    </div>
+  </div>
+  <button id="chat-toggle">💬<div class="chat-ping"></div></button>
+</div>
+
+<script>
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+(function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+document.querySelectorAll('a,button,.surprise-card,.work-card,.skill-block').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='20px';cursor.style.height='20px';ring.style.width='52px';ring.style.height='52px';});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='10px';cursor.style.height='10px';ring.style.width='36px';ring.style.height='36px';});
+});
+
+window.addEventListener('scroll',()=>{
+  const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('progress').style.width=pct+'%';
+});
+
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll&&e.target.querySelectorAll('.lang-bar-fill').forEach(b=>{b.style.width=b.dataset.width+'%';});
+    }
+  });
+},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+
+document.querySelectorAll('.reveal,.journey-item,.work-card,.skill-block,.edu-item,.lang-section').forEach(el=>io.observe(el));
+
+const langObs=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting) document.querySelectorAll('.lang-bar-fill').forEach(b=>{b.style.width=b.dataset.width+'%';});
+},{threshold:0.3});
+const ls=document.querySelector('.lang-section');
+if(ls) langObs.observe(ls);
+
+function toggleSurprise(el){
+  const h=el.querySelector('.surprise-hidden'),hint=el.querySelector('.surprise-hint');
+  if(h.style.display==='block'){h.style.display='none';hint.style.display='block';}
+  else{h.style.display='block';hint.style.display='none';}
+}
+
+let qLeft=5;
+const chatWin=document.getElementById('chat-window'),chatToggle=document.getElementById('chat-toggle');
+const chatMsgs=document.getElementById('chat-msgs'),chatIn=document.getElementById('chat-in');
+const chatBtn=document.getElementById('chat-btn'),qleftEl=document.getElementById('qleft');
+
+const KIM=`You are a warm, direct AI assistant for Kim Hwa Mok's personal resume website. Answer questions about Kim accurately and enthusiastically. Keep answers to 2-4 sentences — clear and concise.
+
+ABOUT KIM: Full name Kim Hwa Mok. Male. Korean. Location: Seoul, South Korea. Email: hwamok200071@gmail.com. Grew up in Malaysia, had a working holiday in the UK, served in the Korean army, now lives in Seoul. Plays board games every Wednesday. Work style: clear, concise, straight to the point — and diligently finishes tasks.
+
+PROFESSIONAL: Current role: Marketing Manager & Live Commerce Growth Strategist at Shopeakstore, May 2024–Present. Scales TikTok & Shopee live retail from Korea to Singapore. Uses psychology-backed conversion scripts to grow livestream revenue (target: 2K to 4K+ SGD per stream). Builds automation systems with N8N and Google Sheets. Previous: Public Service Officer at Dodamdong Community Service Center (May 2022–Feb 2024), supported 2,000+ people. Served in the Korean military.
+
+EDUCATION: BSc (Hons) Psychology & Cognitive Neuroscience, Second Upper — University of Nottingham Malaysia. Foundation in Science — University of Nottingham Malaysia. IGCSE (3A*, 2A, 2B) — Havil International School.
+
+SKILLS: TikTok Live, Shopee Live, conversion optimization, cross-border retail, N8N, Google Sheets, Excel, CapCut, SPSS, MATLAB, Python (learning), consumer psychology, content strategy, SOP design.
+
+LANGUAGES: English (fluent), Korean (intermediate), Chinese (intermediate), Malay (basic), German (learning).
+
+If asked why hire Kim: emphasize rare combo of psychology + live commerce + automation + multilingual + cross-border experience. He gets results and finishes what he starts.`;
+
+chatToggle.addEventListener('click',()=>{
+  const open=chatWin.classList.toggle('open');
+  if(open){const p=chatToggle.querySelector('.chat-ping');if(p)p.remove();}
+});
+
+function addMsg(text,type){
+  const d=document.createElement('div');d.className=`msg ${type}`;
+  d.innerHTML=`<div class="msg-b">${text}</div>`;
+  chatMsgs.appendChild(d);chatMsgs.scrollTop=chatMsgs.scrollHeight;
+}
+function showTyping(){
+  const d=document.createElement('div');d.className='msg bot';d.id='typing';
+  d.innerHTML=`<div class="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>`;
+  chatMsgs.appendChild(d);chatMsgs.scrollTop=chatMsgs.scrollHeight;
+}
+async function send(){
+  const text=chatIn.value.trim();if(!text||qLeft<=0)return;
+  addMsg(text,'user');chatIn.value='';qLeft--;qleftEl.textContent=qLeft+' left';
+  showTyping();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:KIM,messages:[{role:'user',content:text}]})});
+    const data=await res.json();
+    document.getElementById('typing')?.remove();
+    addMsg(data.content?.[0]?.text||"Couldn't connect, try again!",'bot');
+  }catch{document.getElementById('typing')?.remove();addMsg("Connection issue — please try again!",'bot');}
+  if(qLeft===0){document.getElementById('chat-foot-area').outerHTML=`<div class="chat-done">All 5 questions used! Thanks for your interest 🙏<br><a href="mailto:hwamok200071@gmail.com">hwamok200071@gmail.com</a></div>`;}
+}
+chatBtn.addEventListener('click',send);
+chatIn.addEventListener('keydown',e=>{if(e.key==='Enter')send();});
+</script>
+</body>
+</html>
