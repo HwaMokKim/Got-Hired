@@ -455,7 +455,7 @@ footer a{color:var(--accent);text-decoration:none}
     <p class="hire-sub" data-en="You've read the story. You've seen the work. Let's write the next chapter — together." data-kr="스토리를 읽으셨습니다. 성과를 확인하셨습니다. 다음 챕터를 — 함께 써나갑시다.">You've read the story. You've seen the work. Let's write the next chapter — together.</p>
     <div class="hire-actions" id="hireActions"></div>
     <div class="hire-contact-strip">
-      <a href="/cdn-cgi/l/email-protection#325a45535f5d5900020202050372555f535b5e1c515d5f"><span class="__cf_email__" data-cfemail="a1c9d6c0ccceca939191919690e1c6ccc0c8cd8fc2cecc">[email&#160;protected]</span></a> ·
+      <span id="contactEmail" style="color:var(--accent)"></span> ·
       <span data-en="Seoul, South Korea" data-kr="대한민국 서울">Seoul, South Korea</span><br>
       +82 10 6690 6420
     </div>
@@ -598,13 +598,25 @@ window.toggleSurprise = function(el) {
   }
 };
 
+// BUILD EMAIL LINKS AT RUNTIME (bypass Cloudflare obfuscation)
+var em = 'hwamok200071' + '@' + 'gmail.com';
+var ce = document.getElementById('contactEmail');
+if (ce) {
+  var ea = document.createElement('a');
+  ea.href = 'mai' + 'lto:' + em;
+  ea.textContent = em;
+  ea.style.color = 'var(--accent)';
+  ea.style.textDecoration = 'none';
+  ce.appendChild(ea);
+}
+
 // CONTACT BUTTONS
 function renderButtons(isKr) {
   var a = document.getElementById('hireActions');
   if (!a) return;
   if (isKr) {
     a.innerHTML =
-      '<a href="mailto:hwamok200071@gmail.com" class="btn-hire">' +
+      '<a href="' + ('mai'+'lto:'+'hwamok200071'+'@'+'gmail.com') + '" class="btn-hire">' +
         '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
         '이메일 보내기' +
       '</a>' +
@@ -615,7 +627,7 @@ function renderButtons(isKr) {
       '<a href="#person" class="btn-outline-hire">&#8593; 다시 읽기</a>';
   } else {
     a.innerHTML =
-      '<a href="mailto:hwamok200071@gmail.com" class="btn-hire">' +
+      '<a href="' + ('mai'+'lto:'+'hwamok200071'+'@'+'gmail.com') + '" class="btn-hire">' +
         '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
         'Email Kim' +
       '</a>' +
